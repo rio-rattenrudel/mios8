@@ -1,4 +1,4 @@
-; $Id: sid_preset_lead.inc 869 2009-12-08 21:52:43Z tk $
+; $Id$
 ;
 ; MIDIbox SID
 ; Lead Patch Preset
