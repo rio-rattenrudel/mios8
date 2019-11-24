@@ -247,6 +247,23 @@ SID_MIDI_CC_NoNRPNDataL
 
 	;; NRPN value MSB is engine specific and therefore handled in sid_midi_*.inc
 
+;; #######################################################
+;; # RIO: CC 120 reset/reload preset
+;; #######################################################
+
+	;; check if CC 120 (CC#120)
+	movlw	0x78
+	cpfseq	SID_MIDI_PARAMETER1, BANKED
+	rgoto	SID_MIDI_CC_NoInitPreset
+	movf	SID_MIDI_PARAMETER2, BANKED
+	bz	SID_MIDI_CC_NoInitPreset
+SID_MIDI_CC_InitPreset
+	goto	CS_MENU_MS_NotifyInitPreset
+SID_MIDI_CC_NoInitPreset
+
+;; #######################################################
+;; # RIO: END MODIFICATION
+;; #######################################################
 
 	;; check if All Notes Off (CC#123 == 0)
 	movlw	0x7b

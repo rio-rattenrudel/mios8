@@ -416,6 +416,62 @@ CS_MENU_MS_GetSIDBank
 	andlw	0x07
 	return
 
+;; #######################################################
+;; # RIO: CC 120 reset/reload preset
+;; #######################################################
+
+;; --------------------------------------------------------------------------
+;;  This function is called to forward a Init Preset event to the control surface
+;;  Input:
+;;     o midi channel in SID_CURRENT_CHANNEL
+;;     o patch number in SID_MIDI_PARAMETER2 of INDF0 lower value
+;; --------------------------------------------------------------------------
+CS_MENU_MS_NotifyInitPreset
+	;; request patch send to SIDs with matching channel number
+	SET_BSR	SID_BASE
+	clrf	PRODL			; PRODL used as counter
+CS_MENU_MS_NotifyInitPresetL
+	;; calc pointer to channel entry
+	lfsr	FSR0, CS_MENU_SID_M_CHN
+	movf	PRODL, W
+	addwf	FSR0L, F
+
+	;; check if channel number matches
+	movf	INDF0, W
+	xorwf	SID_CURRENT_CHANNEL, W, BANKED
+	andlw	0x0f
+	bnz	CS_MENU_MS_NotifyInitPresetLN
+
+	;; get patch number matches (in this case don't change the patch)
+	movlw	(CS_MENU_SID_M_PATCH-CS_MENU_SID_M_CHN) & 0xff
+	addwf	FSR0L, F
+	andlw	0x7f
+
+	;; copy INDF0 to SID_MIDI_PARAMETER2 and masked 0x7f
+	movf	INDF0, W
+	andlw	0x7f
+	movwf	SID_MIDI_PARAMETER2
+
+	;; store patch number
+	movff	SID_MIDI_PARAMETER2, INDF0
+
+	;; skip if patch change already requested
+	movlw	(CS_MENU_TX_M_CTR-CS_MENU_SID_M_PATCH) & 0xff
+	addwf	FSR0L, F
+	BRA_IFSET INDF0, 7, ACCESS, CS_MENU_MS_NotifyInitPresetLN
+	;; request patch change
+	movlw	0x81
+	movwf	INDF0
+CS_MENU_MS_NotifyInitPresetLN
+	incf	PRODL, F
+	BRA_IFCLR PRODL, 2, ACCESS, CS_MENU_MS_NotifyInitPresetL
+
+	return
+
+;; #######################################################
+;; # RIO: END MODIFICATION
+;; #######################################################
+
 ;; --------------------------------------------------------------------------
 ;;  This function is called to forward a Program Change event to the control surface
 ;;  Input:
