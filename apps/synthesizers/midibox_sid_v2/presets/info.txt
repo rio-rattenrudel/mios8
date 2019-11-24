@@ -1,0 +1,42 @@
+Yes, currently the Ctrlr panel can't be used as patch librarian, I'm waiting for an update as well.
+
+Quote
+TK wrote:
+
+
+    I wonder why MIOS does not store the patch in the buffer when you send it a sysex message... would make more sense imho
+
+
+Not true, the SysEx implementation of MBSID is *very* flexible! :-)
+
+It's possible to send the patch either to a given bank and patch slot, or directly into the edit buffer (so that a patch won't be overwritten, resp. could be stored with the SAVE function from the CS)
+
+This is documented here: http://svnmios.midibox.org/filedetails.php?repname=svn.mios&path=%2Ftrunk%2Fapps%2Fsynthesizers%2Fmidibox_sid_v2%2Fdoc%2Fmbsidv2_sysex_implementation.txt
+resp. in doc/mbsidv2_sysex_implementation.txt of the installation package that you downloaded.
+
+Quick guide (if you don't want to work through this document):
+
+The SysEx patch starts with:
+
+Quote
+
+    F0 00 00 7E 4B <device-number> 02 00 <bank> <patch> <1024 bytes of dump data> <checksum> F7
+
+
+You can change the bank and patch number directly in the SysEx header, it doesn't affect the checksum.
+
+If you want to send the patch directly to the edit buffer (-> no BankStick overwrite), replace the "00" before <bank> by "08"
+
+Quote
+
+    F0 00 00 7E 4B <device-number> 02 08 <bank> <patch> <1024 bytes of dump data> <checksum> F7
+
+(<bank> and <patch> are ignored in this case)
+
+Again, this change doesn't affect the checksum which make manual edits easy!
+
+SysEx data can be loaded/modified/sent with the SysEx tool of MIOS Studio.
+
+Once the promissed Ctrlr updates are also available for MacOS, I will continue on the panel (I'm also a Mac user...)
+
+Best Regards, Thorsten.
