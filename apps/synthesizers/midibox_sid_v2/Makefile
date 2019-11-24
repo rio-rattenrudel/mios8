@@ -14,7 +14,8 @@ GPASM_DEFINES =
 
 # default rule that defines the .hex files which should be created
 # note: always require a "cleanall", since dependencies (e.g. on .h and .inc files) are not properly declared
-all: cleanall setup_6581.hex setup_8580.hex setup_sammich_sid.hex setup_tk.hex setup_tk2.hex setup_mb6582.hex sid_filter_table.hex
+#all: cleanall setup_6581.hex setup_8580.hex setup_sammich_sid.hex setup_tk.hex setup_tk2.hex setup_mb6582.hex sid_filter_table.hex setup_8580_rio.hex setup_6581_rio.hex
+all: cleanall sid_filter_table.hex setup_8580_rio.hex setup_6581_rio.hex
 
 # for a separate build
 sid_filter_table:
