@@ -120,9 +120,17 @@ SIDSE_D_Handler_Note_L
 	movff	SID_LOCAL_ENS + SID_ENSx_CTRL1, WREG
 	BRA_IFSET WREG, SID_ENS_CTRL1_MONO, ACCESS, SIDSE_D_Handler_Note_NotR
 SIDSE_D_Handler_Note_R
+	;; #######################################################
+	;; # RIO: SKIP STEREO MODE
+	;; #######################################################
+#if MONO_DRUM_ENGINE == 0
 	SIDSE_D_HANDLER_NOTE_MACRO SIDR_V1_BASE
 	SIDSE_D_HANDLER_NOTE_MACRO SIDR_V2_BASE
 	SIDSE_D_HANDLER_NOTE_MACRO SIDR_V3_BASE
+#endif
+	;; #######################################################
+	;; # RIO: END MODIFICATION
+	;; #######################################################
 SIDSE_D_Handler_Note_NotR
 
 	;; ------------------------------------------------------------------
@@ -139,11 +147,19 @@ SIDSE_D_Handler_Filter_L
 	movff	SID_LOCAL_ENS + SID_ENSx_CTRL1, WREG
 	BRA_IFSET WREG, SID_ENS_CTRL1_MONO, ACCESS, SIDSE_D_Handler_Filter_NotR
 SIDSE_D_Handler_Filter_R
+	;; #######################################################
+	;; # RIO: SKIP STEREO MODE
+	;; #######################################################
+#if MONO_DRUM_ENGINE == 0
 	incf	SID_SE_ELEMENT_NUM, F, BANKED
 	lfsr	FSR0, SID_PATCH_BUFFER_SHADOW + SID_Ix_M_S2F_BASE
 	lfsr	FSR1, SID_MOD_TARG_FIL2_L
 	lfsr	FSR2, SIDR_BASE
 	call	SIDSE_Filter
+#endif
+	;; #######################################################
+	;; # RIO: END MODIFICATION
+	;; #######################################################
 SIDSE_D_Handler_Filter_NotR
 
 
@@ -263,10 +279,18 @@ SIDSE_D_UpdateStatRegs_NoAcc
 	BRA_IFSET WREG, SID_ENS_CTRL1_MONO, ACCESS, SIDSE_D_UpdateStatRegs_Mono
 SIDSE_D_UpdateStatRegs_Stereo
 	;; stereo mode:	most SIDs registers already updated, copy over the static ones
+	;; #######################################################
+	;; # RIO: SKIP STEREO MODE
+	;; #######################################################
+#if MONO_DRUM_ENGINE == 0
 	SIDSE_D_UPDATESTAT_MACRO SIDR_V1_BASE, SIDR_BASE + SIDx_V1_FRQ_L
 	SIDSE_D_UPDATESTAT_MACRO SIDR_V2_BASE, SIDR_BASE + SIDx_V2_FRQ_L
 	SIDSE_D_UPDATESTAT_MACRO SIDR_V3_BASE, SIDR_BASE + SIDx_V3_FRQ_L
 	rgoto	SIDSE_D_UpdateStatRegs_End
+#endif
+	;; #######################################################
+	;; # RIO: END MODIFICATION
+	;; #######################################################
 
 
 SIDSE_D_UpdateStatRegs_Mono
@@ -571,9 +595,17 @@ SIDSE_D_SYNC_LFO_NotL
 	movff	SID_LOCAL_ENS + SID_ENSx_CTRL1, WREG
 	BRA_IFSET WREG, SID_ENS_CTRL1_MONO, ACCESS, SIDSE_D_SYNC_LFO_NotR
 SIDSE_D_SYNC_LFO_R
+	;; #######################################################
+	;; # RIO: SKIP STEREO MODE
+	;; #######################################################
+#if MONO_DRUM_ENGINE == 0
 	SIDSE_D_SYNC_LFO_MACRO SID_SE_TRG_EVNT_H, SID_TRG_TARGET_H_L4, SIDR_V1_BASE, SID_LFO7_BASE, SID_LFO8_BASE
 	SIDSE_D_SYNC_LFO_MACRO SID_SE_TRG_EVNT_H, SID_TRG_TARGET_H_L5, SIDR_V2_BASE, SID_LFO9_BASE, SID_LFO10_BASE
 	SIDSE_D_SYNC_LFO_MACRO SID_SE_TRG_EVNT_H, SID_TRG_TARGET_H_L6, SIDR_V3_BASE, SID_LFO11_BASE, SID_LFO12_BASE
+#endif
+	;; #######################################################
+	;; # RIO: END MODIFICATION
+	;; #######################################################
 SIDSE_D_SYNC_LFO_NotR
 #endif
 
@@ -598,9 +630,17 @@ SIDSE_D_SYNC_Note_L
 	movff	SID_LOCAL_ENS + SID_ENSx_CTRL1, WREG
 	BRA_IFSET WREG, SID_ENS_CTRL1_MONO, ACCESS, SIDSE_D_SYNC_Note_NotR
 SIDSE_D_SYNC_Note_R
+	;; #######################################################
+	;; # RIO: SKIP STEREO MODE
+	;; #######################################################
+#if MONO_DRUM_ENGINE == 0
 	SIDSE_D_SYNC_NOTE_MACRO SID_SE_TRG_EVNT_L, SID_TRG_TARGET_L_O1R, SIDR_V1_BASE
 	SIDSE_D_SYNC_NOTE_MACRO SID_SE_TRG_EVNT_L, SID_TRG_TARGET_L_O2R, SIDR_V2_BASE
 	SIDSE_D_SYNC_NOTE_MACRO SID_SE_TRG_EVNT_L, SID_TRG_TARGET_L_O3R, SIDR_V3_BASE
+#endif
+	;; #######################################################
+	;; # RIO: END MODIFICATION
+	;; #######################################################
 SIDSE_D_SYNC_Note_NotR
 
 	return
@@ -1135,8 +1175,16 @@ SID_SE_D_NoteOn
 
 	;; number of voices depends on stereo/mono mode
 	SET_BSR	SID_LOCAL_ENS
+	;; #######################################################
+	;; # RIO: SKIP STEREO MODE
+	;; #######################################################
+#if MONO_DRUM_ENGINE == 0
 	movlw	0x60
 	btfsc	SID_LOCAL_ENS + SID_ENSx_CTRL1, SID_ENS_CTRL1_MONO, BANKED
+#endif
+	;; #######################################################
+	;; # RIO: END MODIFICATION
+	;; #######################################################
 	movlw	0x30
 	SET_BSR	SID_BASE
 	iorwf	SID_CURRENT_VOICE_ASSG, F, BANKED
