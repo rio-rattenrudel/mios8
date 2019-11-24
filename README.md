@@ -25,3 +25,7 @@ This fork contains some modifications to the MBSID v2 Master Branch. The customi
 5. [Feature: Triggering SID refresh to avoid hanging VCA](https://github.com/rio-rattenrudel/mios8/commit/323101d8fdf683136688ee70eabc316e7e72c9dd)
 
 * Added "Reload Patch CC" via CC#120. Why? You can read more about it in this thread: http://midibox.org/forums/topic/20714-triggering-sid-refresh-by-an-event/#comment-180392
+
+6. [Added: SID Patch Collections](https://github.com/rio-rattenrudel/mios8/commit/78d15b482eee866e3bf2819cdbda6e1e2b939373)
+
+* Added all collected SID Patch Packs.
