@@ -1800,19 +1800,41 @@ CS_MENU_PRINT_SeqSteps_Loop
 CS_MENU_PRINT_SeqSteps_Loop_G0
 	BRA_IFSET TMP3, 0, ACCESS, CS_MENU_PRINT_SeqSteps_Loop_G0A1
 CS_MENU_PRINT_SeqSteps_Loop_G0A0
+	;; #######################################################
+	;; # RIO: LCD_MOP_AL202C CHARACTER
+	;; #######################################################
+#if LCD_MOP_AL202C == 1
+	movlw	0xcd	; (dot)
+#else
 	movlw	0xa5	; (dot)
+#endif
 	rgoto	CS_MENU_PRINT_SeqSteps_Loop_Cont
 CS_MENU_PRINT_SeqSteps_Loop_G0A1
+#if LCD_MOP_AL202C == 1
+	movlw	0xfa	; 'F' bold F
+#else
 	movlw	'A'
+#endif
 	rgoto	CS_MENU_PRINT_SeqSteps_Loop_Cont
 
 CS_MENU_PRINT_SeqSteps_Loop_G1
 	BRA_IFSET TMP3, 0, ACCESS, CS_MENU_PRINT_SeqSteps_Loop_G1A1
 CS_MENU_PRINT_SeqSteps_Loop_G1A0
+#if LCD_MOP_AL202C == 1
+	movlw	'*'		; *
+#else
 	movlw	'*'
+#endif
 	rgoto	CS_MENU_PRINT_SeqSteps_Loop_Cont
 CS_MENU_PRINT_SeqSteps_Loop_G1A1
+#if LCD_MOP_AL202C == 1
+	movlw	0xf8	; 'R' bold R
+#else
 	movlw	'S'
+#endif
+	;; #######################################################
+	;; # RIO: END MODIFICATION
+	;; #######################################################
 	;; 	rgoto	CS_MENU_PRINT_SeqSteps_Loop_Cont
 
 CS_MENU_PRINT_SeqSteps_Loop_Cont
